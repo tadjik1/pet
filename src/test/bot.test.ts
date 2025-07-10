@@ -3,6 +3,7 @@ import { ApiCallFn } from "grammy";
 import { beforeAll, beforeEach, expect, test } from "vitest";
 
 import bot from "../bot";
+import type { UserFromGetMe } from "grammy/out/types";
 
 type Function = ApiCallFn<typeof bot.api.raw>;
 type ResultType = Awaited<ReturnType<Function>>;
@@ -59,7 +60,7 @@ beforeAll(async () => {
     can_join_groups: true,
     can_read_all_group_messages: true,
     supports_inline_queries: false,
-  };
+  } as UserFromGetMe;
   await bot.init();
 }, 5000);
 
