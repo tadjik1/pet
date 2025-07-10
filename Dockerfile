@@ -34,7 +34,7 @@ RUN npm prune --omit=dev
 FROM base
 
 # Copy built application
-COPY --from=build /app/node_modules /app
+COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app
 
 ENV NODE_ENV="production"
