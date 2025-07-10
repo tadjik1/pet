@@ -19,4 +19,4 @@ jobs:
 
       - run: npm test
         env:
-          CI: true
+          BOT_TOKEN: bot-token
