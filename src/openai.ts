@@ -1,12 +1,15 @@
 import OpenAI from "openai";
 import langfuse from "./langfuse";
-import { ResponseInput } from "openai/resources/responses/responses";
+import {
+  ResponseInput,
+  ResponseInputMessageContentList,
+} from "openai/resources/responses/responses";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "fake-key" });
 
-export async function getAnswer(question: string) {
+export async function getAnswer(question: ResponseInputMessageContentList) {
   if (process.env.NODE_ENV === "test") {
-    return `${question}: answer`;
+    return "answer";
   }
 
   const prompt = await langfuse.getPrompt("system_prompt");
