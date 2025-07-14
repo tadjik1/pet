@@ -68,15 +68,9 @@ beforeEach(() => {
   outgoingRequests = [];
 });
 
-test("reset; three time plus, two time minus", async () => {
-  await bot.handleUpdate(generateMessage("reset"));
-  await bot.handleUpdate(generateMessage("+"));
-  await bot.handleUpdate(generateMessage("+"));
-  await bot.handleUpdate(generateMessage("+"));
-  await bot.handleUpdate(generateMessage("-"));
-  await bot.handleUpdate(generateMessage("-"));
-
-  expect(outgoingRequests.length).toBe(6);
+test("пустое сообщение", async () => {
+  await bot.handleUpdate(generateMessage(""));
+  expect(outgoingRequests.length).toBe(1);
   const payload = outgoingRequests?.pop()?.payload;
   expect(payload).not.toBeNull();
 
@@ -90,5 +84,24 @@ test("reset; three time plus, two time minus", async () => {
     throw new Error("Payload is not a text payload");
   }
 
-  expect(payload.text).toBe("Got another message!");
+  expect(payload.text).toBe("Пожалуйста, пришлите текст.");
+}, 5000);
+
+test("вопрос", async () => {
+  await bot.handleUpdate(generateMessage("вопрос"));
+  expect(outgoingRequests.length).toBe(2);
+  const payload = outgoingRequests?.pop()?.payload;
+  expect(payload).not.toBeNull();
+
+  if (!payload) {
+    throw new Error("Payload is null");
+  }
+
+  expect(isTextPayload(payload)).toBe(true);
+
+  if (!isTextPayload(payload)) {
+    throw new Error("Payload is not a text payload");
+  }
+
+  expect(payload.text).toBe("вопрос: answer");
 }, 5000);
