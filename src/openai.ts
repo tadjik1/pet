@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-const client = new OpenAI();
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "fake-key" });
 
 export async function getAnswer(question: string) {
   if (process.env.NODE_ENV === "test") {
