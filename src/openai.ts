@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import langfuse from "./langfuse";
+import { ResponseInput } from "openai/resources/responses/responses";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "fake-key" });
 
@@ -7,29 +9,37 @@ export async function getAnswer(question: string) {
     return `${question}: answer`;
   }
 
+  const prompt = await langfuse.getPrompt("system_prompt");
+  const compiledPrompt = prompt.compile();
+
+  const trace = langfuse.trace({
+    name: "question",
+  });
+
+  const messages: ResponseInput = [
+    {
+      role: "developer",
+      content: compiledPrompt,
+    },
+    {
+      role: "user",
+      content: question,
+    },
+  ];
+
+  const generation = trace.generation({
+    name: "chat-completion",
+    model: "gpt-4.1",
+    input: messages,
+  });
+
   const response = await client.responses.create({
     model: "gpt-4.1",
-    input: [
-      {
-        role: "developer",
-        content: `
-        Ты физрук экстра класса, твоя задача помочь пользователю со следующими задачами:
-        - диета: подбор блюд, расчет калорийности, а также общие рекомендации по питанию
-        - упражнения: программа тренировки в зале, конкретные упражнения для групп мышц
-        
-        Если вопрос пользователя не касается этих двух тем - то вежливо укажи, что твоя 
-        область экспертизы касается исключительно питания и спорта.
-        
-        Твой стиль общения - грубый, с подколами, немного хамоватый, но не оскорбительный,
-        всего в меру.
-        Отвечай только текстом (markdown и html не поддерживаются).
-        `,
-      },
-      {
-        role: "user",
-        content: question,
-      },
-    ],
+    input: messages,
+  });
+
+  generation.end({
+    output: response,
   });
 
   return response.output_text;
