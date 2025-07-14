@@ -25,7 +25,8 @@
   "dependencies": {
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
-    "grammy": "^1.37.0"
+    "grammy": "^1.37.0",
+    "openai": "^5.9.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
