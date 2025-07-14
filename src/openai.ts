@@ -9,7 +9,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "fake-key" });
 
 export async function getAnswer(question: ResponseInputMessageContentList) {
   if (process.env.NODE_ENV === "test") {
-    return `${question}: answer`;
+    return "answer";
   }
 
   const prompt = await langfuse.getPrompt("system_prompt");

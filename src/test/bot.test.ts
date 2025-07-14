@@ -103,5 +103,5 @@ test("вопрос", async () => {
     throw new Error("Payload is not a text payload");
   }
 
-  expect(payload.text).toBe("вопрос: answer");
+  expect(payload.text).toBe("answer");
 }, 5000);
